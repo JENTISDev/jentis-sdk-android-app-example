@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JentisAppExample</string>
+    <string name="set_new_user">Set new user</string>
+    <string name="set_consent">Set consent</string>
 </resources>
