@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "826424990795",
+    "project_id": "jentis-app-android",
+    "storage_bucket": "jentis-app-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826424990795:android:a3df59b5286865b5c8c1ce",
+        "android_client_info": {
+          "package_name": "com.jentis.jentisappexample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7sihJWOZBRv_-s9FFXBwON2lDJtL7uUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

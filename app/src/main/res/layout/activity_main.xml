@@ -10,20 +10,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
         android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center"
+            android:textSize="36sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Jentis SDK Demo" />
 
         <Button
             android:id="@+id/btn_set_new_user"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/set_new_user"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"/>
 
         <Button
             android:id="@+id/btn_set_consent"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/set_consent"/>
 
     </LinearLayout>
