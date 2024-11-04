@@ -1,44 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:padding="16dp"
+    android:gravity="center_horizontal">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <!-- Título -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jentis SDK Demo"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Subtítulo -->
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select an action to perform"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botão: Set Consent -->
+    <Button
+        android:id="@+id/btnSetConsent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Consent"
+        android:layout_marginTop="24dp" />
+
+    <!-- Botão: Send Data Submission -->
+    <Button
+        android:id="@+id/btnSendDataSubmission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Data Submission"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botão: Add Item to Push Queue -->
+    <Button
+        android:id="@+id/btnAddToPushQueue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Item to Push Queue"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botão: Submit Stored Push Data -->
+    <Button
+        android:id="@+id/btnSubmitPushData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit Stored Push Data"
+        android:layout_marginTop="16dp" />
+
+    <!-- Botão: Send Vendors -->
+    <Button
+        android:id="@+id/btnSendVendors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send vendors"
+        android:layout_marginTop="16dp" />
+
+    <!-- Caixa Condicional para "Send Vendors" -->
+    <LinearLayout
+        android:id="@+id/vendorBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:background="@android:color/darker_gray"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone">
+
+        <!-- Opções de Vendor com Spinners -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="googleanalytics"
+            android:layout_marginTop="8dp" />
+        <Spinner
+            android:id="@+id/spinnerGoogleAnalytics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/vendor_options" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_gravity="center"
-            android:textSize="36sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="Jentis SDK Demo" />
-
-        <Button
-            android:id="@+id/btn_set_new_user"
+            android:text="facebook"
+            android:layout_marginTop="8dp" />
+        <Spinner
+            android:id="@+id/spinnerFacebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/set_new_user"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:entries="@array/vendor_options" />
 
-        <Button
-            android:id="@+id/btn_set_consent"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="awin"
+            android:layout_marginTop="8dp" />
+        <Spinner
+            android:id="@+id/spinnerAwin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="@string/set_consent"/>
+            android:entries="@array/vendor_options" />
 
+        <!-- Botão Set Vendors -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginTop="16dp">
+            <Button
+                android:id="@+id/btnSetVendors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Vendors" />
+        </LinearLayout>
     </LinearLayout>
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
