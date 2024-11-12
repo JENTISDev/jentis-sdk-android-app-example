@@ -1,15 +1,3 @@
 <resources>
-    <string name="app_name">JentisAppExample</string>
-    <string name="set_consent">Send consent model</string>
-    <string name="send_data_submission_model">Send Data Submission Model</string>
-    <string name="add_item_to_push_queue">Add Item to Push Queue</string>
-    <string name="submit_stored_push_data">Submit Stored Push Data</string>
-    <string name="jentis_sdk_demo">Jentis SDK Demo</string>
-    <string name="select_an_action_to_perform">Select an action to perform</string>
-
-    <string-array name="vendor_options">
-        <item>allow</item>
-        <item>deny</item>
-        <item>ncm</item>
-    </string-array>
+    <string name="app_name">JentisSDK</string>
 </resources>

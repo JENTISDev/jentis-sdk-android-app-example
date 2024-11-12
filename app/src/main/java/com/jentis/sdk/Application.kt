@@ -1,4 +1,4 @@
-package com.jentis.jentisappexample
+package com.jentis.sdk
 
 import android.app.Application
 import com.chuckerteam.chucker.api.ChuckerInterceptor
@@ -20,11 +20,14 @@ class Application : Application() {
 
         JentisTrackService.initialize(applicationContext, okHttpClient)
 
-        val container = "ckion-demo"
-        val environment = "live"
-        val version = "3"
-        val debugCode = "a675b5f1-48d2-43bf-b314-ba4830cda52d"
-        val trackDomain = "https://qc3ipx.ckion-dev.jtm-demo.com"
+        val sharedPreferences = getSharedPreferences("config", MODE_PRIVATE)
+
+        val container = sharedPreferences.getString("container", "ckion-demo") ?: "ckion-demo"
+        val environment = sharedPreferences.getString("environment", "live") ?: "live"
+        val version = sharedPreferences.getString("version", "3") ?: "3"
+        val debugCode = sharedPreferences.getString("debugCode", "a675b5f1-48d2-43bf-b314-ba4830cda52d") ?: "a675b5f1-48d2-43bf-b314-ba4830cda52d"
+        val trackDomain = sharedPreferences.getString("trackDomain", "https://qc3ipx.ckion-dev.jtm-demo.com") ?: "https://qc3ipx.ckion-dev.jtm-demo.com"
+        val authToken = "token-test"
 
         JentisTrackService.getInstance().initTracking(
             application = this,
@@ -32,7 +35,8 @@ class Application : Application() {
             container = container,
             environment = environment,
             version = version,
-            debugCode = debugCode
+            debugCode = debugCode,
+            authToken = authToken
         )
     }
 }
