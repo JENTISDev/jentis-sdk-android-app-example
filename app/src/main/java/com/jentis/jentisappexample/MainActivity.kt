@@ -1,4 +1,4 @@
-package com.jentis.sdk
+package com.jentis.jentisappexample
 
 import TrackingScreen
 import android.os.Bundle
@@ -9,8 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jentis.sdk.fragments.ConfigurationScreen
-import com.jentis.sdk.fragments.MainScreen
+import com.jentis.jentisappexample.fragments.ConfigurationScreen
+import com.jentis.jentisappexample.fragments.MainScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.jentis.sdk.ui.theme
+package com.jentis.jentisappexample.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

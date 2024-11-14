@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.jentis.sdk"
+    namespace = "com.jentis.jentisappexample"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.jentis.sdk"
+        applicationId = "com.jentis.jentisappexample"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -75,7 +75,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.3")
 
     // Implemented jentis SDK
-    implementation("com.github.JENTISDev:jentis-sdk-android:1.0.16")
+    implementation("com.github.JENTISDev:jentis-sdk-android:1.0.18")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))

@@ -1,4 +1,4 @@
-package com.jentis.sdk.fragments
+package com.jentis.jentisappexample.fragments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.jentis.sdk.R
+import com.jentis.jentisappexample.R
 import com.jentis.sdk.jentissdk.JentisTrackService
 
 enum class ConsentOptions(val label: String) {

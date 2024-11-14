@@ -1,4 +1,4 @@
-package com.jentis.sdk.fragments
+package com.jentis.jentisappexample.fragments
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -73,6 +73,11 @@ fun ConfigurationScreen(navController: NavController) {
             ) ?: "live"
         )
     }
+    var authToken by rememberSaveable {
+        mutableStateOf(
+            sharedPreferences.getString("token", "1") ?: ""
+        )
+    }
 
     fun saveConfiguration() {
         with(sharedPreferences.edit()) {
@@ -81,6 +86,7 @@ fun ConfigurationScreen(navController: NavController) {
             putString("version", version)
             putString("debugCode", debugCode)
             putString("environment", environment)
+            putString("token", authToken)
             apply()
         }
 
@@ -89,7 +95,8 @@ fun ConfigurationScreen(navController: NavController) {
             container = container,
             environment = environment,
             version = version,
-            debugCode = debugCode
+            debugCode = debugCode,
+            authToken = authToken
         )
     }
 
@@ -132,6 +139,12 @@ fun ConfigurationScreen(navController: NavController) {
                     value = debugCode,
                     onValueChange = { debugCode = it },
                     label = { Text("Debug Code") },
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
+                OutlinedTextField(
+                    value = authToken,
+                    onValueChange = { authToken = it },
+                    label = { Text("Auth Token") },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
 

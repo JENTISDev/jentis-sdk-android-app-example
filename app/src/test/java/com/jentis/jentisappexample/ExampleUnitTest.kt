@@ -1,4 +1,4 @@
-package com.jentis.sdk
+package com.jentis.jentisappexample
 
 import org.junit.Test
 
