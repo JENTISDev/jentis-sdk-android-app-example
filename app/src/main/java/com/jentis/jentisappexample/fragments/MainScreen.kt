@@ -41,8 +41,8 @@ import com.jentis.jentisappexample.R
 import com.jentis.sdk.jentissdk.JentisTrackService
 
 enum class ConsentOptions(val label: String) {
-    ALLOW("allow"),
-    DENY("deny"),
+    ALLOW("true"),
+    DENY("false"),
     NCM("ncm")
 }
 
@@ -130,7 +130,6 @@ fun VendorConsentItem(
 fun MainScreen(navController: NavController) {
     var isBoxVisible by remember { mutableStateOf(false) }
     var vendorConsents by remember { mutableStateOf(getInitialVendorConsents()) }
-    var vendorConsentsChanged by remember { mutableStateOf(mutableMapOf<String, String>()) }
 
     Scaffold(
         topBar = { appTopBar(navController) },
@@ -140,22 +139,15 @@ fun MainScreen(navController: NavController) {
                 isBoxVisible = isBoxVisible,
                 onConsentClicked = { isBoxVisible = !isBoxVisible },
                 vendorConsents = vendorConsents,
-                vendorConsentsChanged = vendorConsentsChanged,
                 onVendorConsentChange = { vendor, consent ->
+                    // Atualiza apenas o mapa de consents
                     vendorConsents = vendorConsents.toMutableMap().apply {
-                        this[vendor] = consent
-                    }
-                    vendorConsentsChanged = vendorConsentsChanged.toMutableMap().apply {
                         this[vendor] = consent
                     }
                 },
                 onVendorsSet = {
-
-                    val vendors = vendorConsents
-                    val vendorsChanged = vendorConsentsChanged
-
-                    JentisTrackService.getInstance()
-                        .setVendors(vendors, vendorsChanged)
+                    // Passa apenas os consents para o SDK
+                    JentisTrackService.getInstance().setConsents(vendorConsents)
                     isBoxVisible = false
                 },
                 navController = navController
@@ -183,7 +175,6 @@ fun mainContent(
     isBoxVisible: Boolean,
     onConsentClicked: () -> Unit,
     vendorConsents: Map<String, String>,
-    vendorConsentsChanged: Map<String, String>,
     onVendorConsentChange: (String, String) -> Unit,
     onVendorsSet: () -> Unit,
     navController: NavController
@@ -244,8 +235,8 @@ fun mainContent(
 
 fun getInitialVendorConsents(): Map<String, String> {
     return mapOf(
-        "googleanalytics" to "allow",
-        "facebook" to "deny",
+        "googleanalytics" to "true",
+        "facebook" to "false",
         "awin" to "ncm"
     )
 }

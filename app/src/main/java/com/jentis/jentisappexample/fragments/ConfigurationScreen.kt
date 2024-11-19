@@ -1,6 +1,6 @@
 package com.jentis.jentisappexample.fragments
 
-import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,9 +24,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jentis.sdk.jentissdk.JentisTrackService
@@ -34,71 +35,13 @@ import com.jentis.sdk.jentissdk.JentisTrackService
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationScreen(navController: NavController) {
-    val context = navController.context
-    val sharedPreferences = context.getSharedPreferences("config", Context.MODE_PRIVATE)
-    var trackDomain by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString(
-                "trackDomain",
-                "nd7cud.mobiweb.jt-demo.com"
-            ) ?: ""
-        )
-    }
-    var container by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString(
-                "container",
-                "mobiweb-demoshop"
-            ) ?: ""
-        )
-    }
-    var version by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString("version", "1") ?: ""
-        )
-    }
-    var debugCode by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString(
-                "debugCode",
-                "44c2acd3-43d4-4234-983b-48e91..."
-            ) ?: ""
-        )
-    }
-    var environment by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString(
-                "environment",
-                "live"
-            ) ?: "live"
-        )
-    }
-    var authToken by rememberSaveable {
-        mutableStateOf(
-            sharedPreferences.getString("token", "1") ?: ""
-        )
-    }
-
-    fun saveConfiguration() {
-        with(sharedPreferences.edit()) {
-            putString("trackDomain", trackDomain)
-            putString("container", container)
-            putString("version", version)
-            putString("debugCode", debugCode)
-            putString("environment", environment)
-            putString("token", authToken)
-            apply()
-        }
-
-        JentisTrackService.getInstance().restartConfig(
-            trackDomain = trackDomain,
-            container = container,
-            environment = environment,
-            version = version,
-            debugCode = debugCode,
-            authToken = authToken
-        )
-    }
+    var trackDomain by remember { mutableStateOf("nd7cud.mobiweb.jt-demo.com") }
+    var container by remember { mutableStateOf("mobiweb-demoshop") }
+    var version by remember { mutableStateOf("1") }
+    var debugCode by remember { mutableStateOf("44c2acd3-43d4-4234-983b-48e91") }
+    var sessionTimeout by remember { mutableStateOf("30") }
+    var environment by remember { mutableStateOf("live") }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -123,28 +66,32 @@ fun ConfigurationScreen(navController: NavController) {
                     label = { Text("Track Domain") },
                     modifier = Modifier.fillMaxWidth().padding(top = 48.dp)
                 )
+
                 OutlinedTextField(
                     value = container,
                     onValueChange = { container = it },
                     label = { Text("Container") },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
+
                 OutlinedTextField(
                     value = version,
                     onValueChange = { version = it },
                     label = { Text("Version") },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
+
                 OutlinedTextField(
                     value = debugCode,
                     onValueChange = { debugCode = it },
                     label = { Text("Debug Code") },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
+
                 OutlinedTextField(
-                    value = authToken,
-                    onValueChange = { authToken = it },
-                    label = { Text("Auth Token") },
+                    value = sessionTimeout,
+                    onValueChange = { sessionTimeout = it },
+                    label = { Text("Session Timeout (seconds)") },
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                 )
 
@@ -169,9 +116,23 @@ fun ConfigurationScreen(navController: NavController) {
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
+
                 Button(onClick = {
-                    saveConfiguration()
-                    navController.popBackStack()
+                    JentisTrackService.getInstance().restartConfig(
+                        trackDomain = trackDomain,
+                        container = container,
+                        environment = environment,
+                        version = version,
+                        debugCode = debugCode,
+                        sessionTimeoutParam = sessionTimeout.toIntOrNull(),
+                        authToken = null
+                    )
+
+                    Toast.makeText(
+                        context,
+                        "Configuration saved successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }) {
                     Text("Save")
                 }

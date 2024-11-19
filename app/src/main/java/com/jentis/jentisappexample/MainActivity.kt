@@ -1,6 +1,5 @@
 package com.jentis.jentisappexample
 
-import TrackingScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.jentis.jentisappexample.fragments.ConfigurationScreen
 import com.jentis.jentisappexample.fragments.MainScreen
+import com.jentis.jentisappexample.fragments.TrackingScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
