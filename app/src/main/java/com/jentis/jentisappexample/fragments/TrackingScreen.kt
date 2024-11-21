@@ -272,9 +272,10 @@ fun addEnrichment(customInitiator: String) {
             "variablesEnrichment" to listOf("enrichment_product_variant")
         ),
         "args" to mapOf(
-            "accountId" to "JENTIS TEST ACCOUNT",
+            "account" to "JENTIS TEST ACCOUNT",
             "page_title" to "Demo-APP Order Confirmed",
-            "productId" to listOf("111", "222", "333", "444")
+            "productId" to listOf("111", "222", "333", "444"),
+            "baseProductId" to listOf("1", "2", "3", "4")
         )
     )
 

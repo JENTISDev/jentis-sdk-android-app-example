@@ -35,11 +35,11 @@ import com.jentis.sdk.jentissdk.JentisTrackService
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationScreen(navController: NavController) {
-    var trackDomain by remember { mutableStateOf("nd7cud.mobiweb.jt-demo.com") }
+    var trackDomain by remember { mutableStateOf("nd7cud.mobiweb.jtm-demo.com") }
     var container by remember { mutableStateOf("mobiweb-demoshop") }
     var version by remember { mutableStateOf("1") }
     var debugCode by remember { mutableStateOf("44c2acd3-43d4-4234-983b-48e91") }
-    var sessionTimeout by remember { mutableStateOf("30") }
+    var sessionTimeout by remember { mutableStateOf("180") }
     var environment by remember { mutableStateOf("live") }
     val context = LocalContext.current
 

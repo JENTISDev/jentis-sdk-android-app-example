@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -128,6 +129,11 @@ fun VendorConsentItem(
 
 @Composable
 fun MainScreen(navController: NavController) {
+    val context = LocalContext.current
+    val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+    val versionName = packageInfo.versionName
+    val versionCode = packageInfo.longVersionCode.toString()
+
     var isBoxVisible by remember { mutableStateOf(false) }
     var vendorConsents by remember { mutableStateOf(getInitialVendorConsents()) }
 
@@ -140,17 +146,16 @@ fun MainScreen(navController: NavController) {
                 onConsentClicked = { isBoxVisible = !isBoxVisible },
                 vendorConsents = vendorConsents,
                 onVendorConsentChange = { vendor, consent ->
-                    // Atualiza apenas o mapa de consents
                     vendorConsents = vendorConsents.toMutableMap().apply {
                         this[vendor] = consent
                     }
                 },
                 onVendorsSet = {
-                    // Passa apenas os consents para o SDK
                     JentisTrackService.getInstance().setConsents(vendorConsents)
                     isBoxVisible = false
                 },
-                navController = navController
+                navController = navController,
+                appVersion = "Version $versionName($versionCode)"
             )
         }
     )
@@ -177,7 +182,8 @@ fun mainContent(
     vendorConsents: Map<String, String>,
     onVendorConsentChange: (String, String) -> Unit,
     onVendorsSet: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    appVersion : String
 ) {
     Column(
         modifier = Modifier
@@ -230,13 +236,22 @@ fun mainContent(
         ) {
             Text("Tracking Examples")
         }
+
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Text(
+            text = appVersion,
+            color = Color.Gray,
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
 
 fun getInitialVendorConsents(): Map<String, String> {
     return mapOf(
-        "googleanalytics" to "true",
+        "google_analytics_4_server-side" to "true",
         "facebook" to "false",
-        "awin" to "ncm"
+        "adwords" to "ncm"
     )
 }
