@@ -114,7 +114,7 @@ fun TrackingScreen(navController: NavController) {
 
                 Button(
                     onClick = {
-                        addEnrichment(customInitiator.value)
+                        addEnrichment()
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
                     modifier = Modifier
@@ -122,6 +122,18 @@ fun TrackingScreen(navController: NavController) {
                         .padding(vertical = 8.dp)
                 ) {
                     Text("Add Enrichment")
+                }
+
+                Button(
+                    onClick = {
+                        addCustomEnrichment()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Text("Add Custom Enrichment")
                 }
             }
         }
@@ -226,7 +238,7 @@ fun addOrders(customInitiator: String) {
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
-fun addEnrichment(customInitiator: String) {
+fun addEnrichment() {
     val mockEnrichment = listOf(
         mapOf(
             "track" to "pageview",
@@ -272,16 +284,31 @@ fun addEnrichment(customInitiator: String) {
             "variablesEnrichment" to listOf("enrichment_product_variant")
         ),
         "args" to mapOf(
-            "account" to "JENTIS TEST ACCOUNT",
+            "accountId" to "JENTIS TEST ACCOUNT",
             "page_title" to "Demo-APP Order Confirmed",
-            "productId" to listOf("111", "222", "333", "444"),
-            "baseProductId" to listOf("1", "2", "3", "4")
+            "productId" to listOf("111", "222", "333", "444")
         )
     )
 
     JentisTrackService.getInstance()
         .addEnrichment(mockEnrichment, enrichmentMap)
-
-    JentisTrackService.getInstance().submit(customInitiator)
 }
 
+fun addCustomEnrichment() {
+    val enrichmentMap = mapOf(
+        "plugin" to mapOf(
+            "pluginId" to "enrichment_xxxlprodfeed"
+        ),
+        "enrichment" to mapOf(
+            "variablesEnrichment" to listOf("enrichment_product_variant")
+        ),
+        "args" to mapOf(
+            "accountId" to "JENTIS TEST ACCOUNT",
+            "page_title" to "Demo-APP Order Confirmed",
+            "productId" to listOf("111", "222", "333", "444")
+        )
+    )
+
+    JentisTrackService.getInstance()
+        .addCustomEnrichment(enrichmentMap)
+}
