@@ -145,14 +145,16 @@ fun addPageView(customInitiator: String) {
         mapOf(
             "track" to "pageview",
             "url" to "https://www.demoapp.com",
-            "title" to "Demo-APP Pagetitle"
-        ),
-        mapOf(
-            "track" to "submit"
+            "title" to "Demo-APP Pagetitle",
+            "document_title" to "Demo-APP Document Title",
+            "virtualPagePath" to "Track Pageview",
+            "window_location_href" to "https://mipion.jtm-demo.com/NEWandroidtest"
         )
     )
 
     JentisTrackService.getInstance().push(mockPageView)
+
+    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }
@@ -172,13 +174,12 @@ fun addProductView(customInitiator: String) {
         ),
         mapOf(
             "track" to "productview"
-        ),
-        mapOf(
-            "track" to "submit"
         )
     )
 
     JentisTrackService.getInstance().push(mockValuesProducts)
+
+    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }
@@ -191,13 +192,12 @@ fun addToCart(customInitiator: String) {
             "id" to "123",
             "name" to "Testproduct",
             "brutto" to 199.99
-        ),
-        mapOf(
-            "track" to "submit"
         )
     )
 
     JentisTrackService.getInstance().push(mockAddToCart)
+
+    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }
@@ -227,13 +227,12 @@ fun addOrders(customInitiator: String) {
             "orderid" to "12345666",
             "brutto" to 499.98,
             "paytype" to "creditcart"
-        ),
-        mapOf(
-            "track" to "submit"
         )
     )
 
     JentisTrackService.getInstance().push(mockOrders)
+
+    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }

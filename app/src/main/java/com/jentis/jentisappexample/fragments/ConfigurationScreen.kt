@@ -25,29 +25,44 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.jentis.jentisappexample.fragments.localdata.SharedPreferencesManager
 import com.jentis.sdk.jentissdk.JentisTrackService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationScreen(navController: NavController) {
-    // State variables
-    var protocol by remember { mutableStateOf("https://") }
-    var trackDomain by remember { mutableStateOf("nd7cud.mobiweb.jtm-demo.com") }
-    var container by remember { mutableStateOf("mobiweb-demoshop") }
-    var version by remember { mutableStateOf("1") }
-    var debugCode by remember { mutableStateOf("44c2acd3-43d4-4234-983b-48e91") }
-    var sessionTimeout by remember { mutableStateOf("180") }
-    var environment by remember { mutableStateOf("live") }
     val context = LocalContext.current
+    val prefsManager = remember { SharedPreferencesManager(context) }
+    val protocol = remember { mutableStateOf(prefsManager.getString("protocol", "https://")) }
+    val trackDomain = remember {
+        mutableStateOf(
+            prefsManager.getString(
+                "trackDomain",
+                "nd7cud.mobiweb.jtm-demo.com"
+            )
+        )
+    }
+    val container =
+        remember { mutableStateOf(prefsManager.getString("container", "mobiweb-demoshop")) }
+    val version = remember { mutableStateOf(prefsManager.getString("version", "1")) }
+    val debugCode = remember {
+        mutableStateOf(
+            prefsManager.getString(
+                "debugCode",
+                "44c2acd3-43d4-4234-983b-48e91"
+            )
+        )
+    }
+    val sessionTimeout =
+        remember { mutableStateOf(prefsManager.getString("sessionTimeout", "180")) }
+    val environment = remember { mutableStateOf(prefsManager.getString("environment", "live")) }
 
     val scrollState = rememberScrollState()
 
@@ -62,23 +77,27 @@ fun ConfigurationScreen(navController: NavController) {
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                ProtocolSelector(protocol) { protocol = it }
-                InputField("Track Domain", trackDomain) { trackDomain = it }
-                InputField("Container", container) { container = it }
-                InputField("Version", version) { version = it }
-                InputField("Debug Code", debugCode) { debugCode = it }
-                InputField("Session Timeout (seconds)", sessionTimeout) { sessionTimeout = it }
-                EnvironmentSelector(environment) { environment = it }
+                ProtocolSelector(protocol.value) { protocol.value = it }
+                InputField("Track Domain", trackDomain.value) { trackDomain.value = it }
+                InputField("Container", container.value) { container.value = it }
+                InputField("Version", version.value) { version.value = it }
+                InputField("Debug Code", debugCode.value) { debugCode.value = it }
+                InputField(
+                    "Session Timeout (seconds)",
+                    sessionTimeout.value
+                ) { sessionTimeout.value = it }
+                EnvironmentSelector(environment.value) { environment.value = it }
                 Spacer(modifier = Modifier.height(20.dp))
                 SaveButton(
                     context = context,
-                    trackDomain = trackDomain,
-                    container = container,
-                    environment = environment,
-                    version = version,
-                    debugCode = debugCode,
-                    sessionTimeout = sessionTimeout,
-                    protocol = protocol
+                    prefsManager = prefsManager,
+                    protocol = protocol.value,
+                    trackDomain = trackDomain.value,
+                    container = container.value,
+                    version = version.value,
+                    debugCode = debugCode.value,
+                    sessionTimeout = sessionTimeout.value,
+                    environment = environment.value
                 )
             }
         }
@@ -160,6 +179,7 @@ fun EnvironmentSelector(selectedEnvironment: String, onEnvironmentChange: (Strin
 @Composable
 fun SaveButton(
     context: android.content.Context,
+    prefsManager: SharedPreferencesManager,
     trackDomain: String,
     container: String,
     environment: String,
@@ -169,6 +189,14 @@ fun SaveButton(
     protocol: String
 ) {
     Button(onClick = {
+        prefsManager.saveString("protocol", protocol)
+        prefsManager.saveString("trackDomain", trackDomain)
+        prefsManager.saveString("container", container)
+        prefsManager.saveString("version", version)
+        prefsManager.saveString("debugCode", debugCode)
+        prefsManager.saveString("sessionTimeout", sessionTimeout)
+        prefsManager.saveString("environment", environment)
+
         JentisTrackService.getInstance().restartConfig(
             trackDomain = trackDomain,
             container = container,
@@ -179,8 +207,9 @@ fun SaveButton(
             authToken = null,
             protocol = protocol
         )
+
         Toast.makeText(context, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
     }) {
-        Text("Save")
+        Text("Save configuration")
     }
 }
