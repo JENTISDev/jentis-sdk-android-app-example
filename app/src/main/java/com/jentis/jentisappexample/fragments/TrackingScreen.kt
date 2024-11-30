@@ -197,7 +197,7 @@ fun addToCart(customInitiator: String) {
 
     JentisTrackService.getInstance().push(mockAddToCart)
 
-    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
+    JentisTrackService.getInstance().push(listOf(mapOf("track" to "addtocart")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }

@@ -5,7 +5,11 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jentis.jentisappexample.fragments.localdata.SharedPreferencesManager
 import com.jentis.sdk.jentissdk.JentisTrackService
 import okhttp3.OkHttpClient
+import java.security.KeyStore
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 class Application : Application() {
 
@@ -22,14 +26,26 @@ class Application : Application() {
         val sessionTimeout = prefsManager.getString("sessionTimeout", "180")
         val environment = prefsManager.getString("environment", "live")
 
+        val trustManagerFactory =
+            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(null as KeyStore?)
+
+        val sslContext = SSLContext.getInstance("TLS")
+        sslContext.init(null, trustManagerFactory.trustManagers, null)
+
         val okHttpClient = OkHttpClient.Builder()
+            .sslSocketFactory(
+                sslContext.socketFactory,
+                trustManagerFactory.trustManagers[0] as X509TrustManager
+            )
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(ChuckerInterceptor.Builder(applicationContext).build())
             .build()
 
-        JentisTrackService.initialize(applicationContext, okHttpClient)
+
+        JentisTrackService.initialize(this, okHttpClient)
 
         JentisTrackService.getInstance().initTracking(
             application = this,

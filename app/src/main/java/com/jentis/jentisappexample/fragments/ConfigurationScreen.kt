@@ -63,6 +63,9 @@ fun ConfigurationScreen(navController: NavController) {
     val sessionTimeout =
         remember { mutableStateOf(prefsManager.getString("sessionTimeout", "180")) }
     val environment = remember { mutableStateOf(prefsManager.getString("environment", "live")) }
+    val isDebuggingEnabled = remember {
+        mutableStateOf(prefsManager.getString("enabledDebugging", "true") == "true")
+    }
 
     val scrollState = rememberScrollState()
 
@@ -80,8 +83,21 @@ fun ConfigurationScreen(navController: NavController) {
                 ProtocolSelector(protocol.value) { protocol.value = it }
                 InputField("Track Domain", trackDomain.value) { trackDomain.value = it }
                 InputField("Container", container.value) { container.value = it }
-                InputField("Version", version.value) { version.value = it }
-                InputField("Debug Code", debugCode.value) { debugCode.value = it }
+
+                DebuggingSwitch(isDebuggingEnabled.value) { isDebuggingEnabled.value = it }
+
+                InputFieldWithEnabled(
+                    "Version",
+                    version.value,
+                    onValueChange = { version.value = it },
+                    isEnabled = isDebuggingEnabled.value
+                )
+                InputFieldWithEnabled(
+                    "Debug Code",
+                    debugCode.value,
+                    onValueChange = { debugCode.value = it },
+                    isEnabled = isDebuggingEnabled.value
+                )
                 InputField(
                     "Session Timeout (seconds)",
                     sessionTimeout.value
@@ -97,21 +113,9 @@ fun ConfigurationScreen(navController: NavController) {
                     version = version.value,
                     debugCode = debugCode.value,
                     sessionTimeout = sessionTimeout.value,
-                    environment = environment.value
+                    environment = environment.value,
+                    isDebuggingEnabled = isDebuggingEnabled.value
                 )
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ConfigurationTopBar(navController: NavController) {
-    TopAppBar(
-        title = { Text("Configuration") },
-        navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
         }
     )
@@ -139,13 +143,16 @@ fun ProtocolSelector(selectedProtocol: String, onProtocolChange: (String) -> Uni
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputField(label: String, value: String, onValueChange: (String) -> Unit) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth()
+fun ConfigurationTopBar(navController: NavController) {
+    TopAppBar(
+        title = { Text("Configuration") },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+        }
     )
 }
 
@@ -177,6 +184,47 @@ fun EnvironmentSelector(selectedEnvironment: String, onEnvironmentChange: (Strin
 }
 
 @Composable
+fun DebuggingSwitch(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Enable Debugging", style = MaterialTheme.typography.bodyLarge)
+        androidx.compose.material3.Switch(
+            checked = isEnabled,
+            onCheckedChange = onToggle
+        )
+    }
+}
+
+@Composable
+fun InputFieldWithEnabled(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isEnabled: Boolean
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier.fillMaxWidth(),
+        enabled = isEnabled
+    )
+}
+
+@Composable
+fun InputField(label: String, value: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 fun SaveButton(
     context: android.content.Context,
     prefsManager: SharedPreferencesManager,
@@ -186,23 +234,29 @@ fun SaveButton(
     version: String,
     debugCode: String,
     sessionTimeout: String,
-    protocol: String
+    protocol: String,
+    isDebuggingEnabled: Boolean
 ) {
     Button(onClick = {
         prefsManager.saveString("protocol", protocol)
         prefsManager.saveString("trackDomain", trackDomain)
         prefsManager.saveString("container", container)
-        prefsManager.saveString("version", version)
-        prefsManager.saveString("debugCode", debugCode)
         prefsManager.saveString("sessionTimeout", sessionTimeout)
         prefsManager.saveString("environment", environment)
+        prefsManager.saveString("enabledDebugging", isDebuggingEnabled.toString())
+
+        val versionToSave = if (isDebuggingEnabled) version else ""
+        val debugCodeToSave = if (isDebuggingEnabled) debugCode else ""
+
+        prefsManager.saveString("version", versionToSave)
+        prefsManager.saveString("debugCode", debugCodeToSave)
 
         JentisTrackService.getInstance().restartConfig(
             trackDomain = trackDomain,
             container = container,
             environment = environment,
-            version = version,
-            debugCode = debugCode,
+            version = versionToSave,
+            debugCode = debugCodeToSave,
             sessionTimeoutParam = sessionTimeout.toIntOrNull(),
             authToken = null,
             protocol = protocol

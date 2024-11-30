@@ -12,7 +12,7 @@ android {
         minSdk = 28
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.14"
+        versionName = "1.0.15"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -68,6 +68,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    // chucker
     debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:3.5.2")
 
