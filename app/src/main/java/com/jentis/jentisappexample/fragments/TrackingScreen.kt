@@ -154,8 +154,6 @@ fun addPageView(customInitiator: String) {
 
     JentisTrackService.getInstance().push(mockPageView)
 
-    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
-
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
@@ -178,8 +176,6 @@ fun addProductView(customInitiator: String) {
     )
 
     JentisTrackService.getInstance().push(mockValuesProducts)
-
-    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
 
     JentisTrackService.getInstance().submit(customInitiator)
 }
@@ -232,8 +228,6 @@ fun addOrders(customInitiator: String) {
 
     JentisTrackService.getInstance().push(mockOrders)
 
-    JentisTrackService.getInstance().push(listOf(mapOf("track" to "submit")))
-
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
@@ -269,9 +263,6 @@ fun addEnrichment() {
             "orderid" to "12345666",
             "brutto" to 499.98,
             "paytype" to "creditcart"
-        ),
-        mapOf(
-            "track" to "submit"
         )
     )
 
