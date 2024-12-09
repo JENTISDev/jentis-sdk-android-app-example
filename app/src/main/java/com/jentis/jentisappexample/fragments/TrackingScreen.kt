@@ -2,6 +2,7 @@ package com.jentis.jentisappexample.fragments
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,12 +14,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -28,8 +31,8 @@ import com.jentis.sdk.jentissdk.JentisTrackService
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrackingScreen(navController: NavController) {
-
     val customInitiator = remember { mutableStateOf("") }
+    val includeEnrichmentData = remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -50,94 +53,89 @@ fun TrackingScreen(navController: NavController) {
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-                Text(
-                    text = "Custom initiator (optional)",
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
+                // Include Enrichment Data
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                ) {
+                    Text(
+                        text = "Include Enrichment Data",
+                        modifier = Modifier.weight(1f)
+                    )
+                    Switch(
+                        checked = includeEnrichmentData.value,
+                        onCheckedChange = { includeEnrichmentData.value = it }
+                    )
+                }
 
+                // Custom Initiator Field
                 TextField(
                     value = customInitiator.value,
                     onValueChange = { customInitiator.value = it },
-                    label = { Text("Enter custom initiator") },
+                    label = { Text("Custom Initiator (Optional)") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 )
 
-                Button(
-                    onClick = {
-                        addPageView(customInitiator.value)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("PageView")
-                }
-
-                Button(
-                    onClick = {
-                        addProductView(customInitiator.value)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Productview")
-                }
-
-                Button(
-                    onClick = {
-                        addToCart(customInitiator.value)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Add-To-Cart")
-                }
-
-                Button(
-                    onClick = {
-                        addOrders(customInitiator.value)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Order")
-                }
-
-                Button(
-                    onClick = {
-                        addEnrichment()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Add Enrichment")
-                }
-
-                Button(
-                    onClick = {
-                        addCustomEnrichment()
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Text("Add Custom Enrichment")
-                }
+                // Buttons Section
+                TrackingButton(
+                    label = "PageView",
+                    backgroundColor = Color.Blue,
+                    onClick = { addPageView(customInitiator.value) }
+                )
+                TrackingButton(
+                    label = "ProductView",
+                    backgroundColor = Color(0xFF9C27B0), // Purple
+                    onClick = { addProductView(customInitiator.value) }
+                )
+                TrackingButton(
+                    label = "Add-To-Cart",
+                    backgroundColor = Color.Green,
+                    onClick = { addToCart(customInitiator.value) }
+                )
+                TrackingButton(
+                    label = "Order",
+                    backgroundColor = Color(0xFFFFA500), // Orange
+                    onClick = { addOrders(customInitiator.value) }
+                )
+                TrackingButton(
+                    label = "Add Enrichment",
+                    backgroundColor = Color(0xFFFF5722), // Deep Orange
+                    onClick = { addEnrichment() }
+                )
+                TrackingButton(
+                    label = "Custom Enrichment",
+                    backgroundColor = Color.Gray,
+                    onClick = { addCustomEnrichment() }
+                )
             }
         }
     )
+}
+
+@Composable
+fun TrackingButton(label: String, backgroundColor: Color, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = label,
+                color = Color.White
+            )
+        }
+    }
 }
 
 fun addPageView(customInitiator: String) {
@@ -287,7 +285,7 @@ fun addEnrichment() {
 fun addCustomEnrichment() {
     val enrichmentMap = mapOf(
         "plugin" to mapOf(
-            "pluginId" to "enrichment_xxxlprodfeed"
+            "pluginId" to "enrichment_xxxlprodfeed_custom_felipe"
         ),
         "enrichment" to mapOf(
             "variablesEnrichment" to listOf("enrichment_product_variant")
