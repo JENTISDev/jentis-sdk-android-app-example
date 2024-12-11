@@ -12,7 +12,7 @@ android {
         minSdk = 28
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.20"
+        versionName = "1.0.21"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -76,7 +76,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.4")
 
     // Implemented jentis SDK
-    implementation("com.github.JENTISDev:jentis-sdk-android:1.0.33")
+    implementation("com.github.JENTISDev:jentis-sdk-android:1.0.35")
 
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))

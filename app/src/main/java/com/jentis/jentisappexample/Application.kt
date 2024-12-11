@@ -56,9 +56,7 @@ class Application : Application() {
             debugCode = debugCode,
             authToken = null,
             sessionTimeoutParam = sessionTimeout.toIntOrNull(),
-            protocol = protocol,
-            enableOfflineTracking = true,
-            offlineTimeout = 3600
+            protocol = protocol
         )
     }
 }

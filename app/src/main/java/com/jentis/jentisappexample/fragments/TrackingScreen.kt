@@ -66,7 +66,10 @@ fun TrackingScreen(navController: NavController) {
                     )
                     Switch(
                         checked = includeEnrichmentData.value,
-                        onCheckedChange = { includeEnrichmentData.value = it }
+                        onCheckedChange = {
+                            includeEnrichmentData.value = it
+                            processEnrichment(it)
+                        }
                     )
                 }
 
@@ -285,7 +288,7 @@ fun addEnrichment() {
 fun addCustomEnrichment() {
     val enrichmentMap = mapOf(
         "plugin" to mapOf(
-            "pluginId" to "enrichment_xxxlprodfeed_custom_felipe"
+            "pluginId" to "enrichment_xxxlprodfeed_custom"
         ),
         "enrichment" to mapOf(
             "variablesEnrichment" to listOf("enrichment_product_variant")
@@ -299,4 +302,9 @@ fun addCustomEnrichment() {
 
     JentisTrackService.getInstance()
         .addCustomEnrichment(enrichmentMap)
+}
+
+fun processEnrichment(checked: Boolean) {
+    if (checked.not())
+        JentisTrackService.getInstance().cleanEnrichments()
 }
