@@ -55,6 +55,7 @@ fun TrackingScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Top
             ) {
                 // Include Enrichment Data
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -69,38 +70,35 @@ fun TrackingScreen(navController: NavController) {
                         checked = includeEnrichmentData.value,
                         onCheckedChange = {
                             includeEnrichmentData.value = it
-                            includeEnrichmentCustomData.value = it.not()
-                            processEnrichment(
-                                includeEnrichmentData.value,
-                                includeEnrichmentCustomData.value
-                            )
                         }
                     )
                 }
 
-                // Include Enrichment Custom Data
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    Text(
-                        text = "Include Custom Enrichment Data",
-                        modifier = Modifier.weight(1f)
-                    )
-                    Switch(
-                        checked = includeEnrichmentCustomData.value,
-                        onCheckedChange = {
-                            includeEnrichmentCustomData.value = it
-                            includeEnrichmentData.value = it.not()
-                            processEnrichment(
-                                includeEnrichmentData.value,
-                                includeEnrichmentCustomData.value
-                            )
-                        }
-                    )
-                }
+                /*
+           // Include Enrichment Custom Data
+           Row(
+               verticalAlignment = Alignment.CenterVertically,
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .padding(bottom = 16.dp)
+           ) {
+               Text(
+                   text = "Include Custom Enrichment Data",
+                   modifier = Modifier.weight(1f)
+               )
+               Switch(
+                   checked = includeEnrichmentCustomData.value,
+                   onCheckedChange = {
+                       includeEnrichmentCustomData.value = it
+                       includeEnrichmentData.value = it.not()
+                       processEnrichment(
+                           includeEnrichmentData.value,
+                           includeEnrichmentCustomData.value
+                       )
+                   }
+               )
+           }
+            */
 
                 // Custom Initiator Field
                 TextField(
@@ -302,39 +300,6 @@ fun addOrders(customInitiator: String, value: Boolean, valueCustom: Boolean) {
 }
 
 fun addEnrichment() {
-    val mockEnrichment = listOf(
-        mapOf(
-            "track" to "pageview",
-            "pagetitle" to "Demo-APP Order Confirmed",
-            "account" to "JENTIS TEST ACCOUNT"
-        ),
-        mapOf(
-            "track" to "product",
-            "type" to "order",
-            "id" to "123",
-            "name" to "Testproduct",
-            "brutto" to 199.99
-        ),
-        mapOf(
-            "track" to "product",
-            "type" to "currentcart",
-            "id" to "777",
-            "color" to "green"
-        ),
-        mapOf(
-            "track" to "product",
-            "type" to "order",
-            "id" to "456",
-            "name" to "Testproduct 2",
-            "brutto" to 299.99
-        ),
-        mapOf(
-            "track" to "order",
-            "orderid" to "12345666",
-            "brutto" to 499.98,
-            "paytype" to "creditcart"
-        )
-    )
 
     val enrichmentMap = mapOf(
         "plugin" to mapOf(
@@ -342,16 +307,11 @@ fun addEnrichment() {
         ),
         "enrichment" to mapOf(
             "variablesEnrichment" to listOf("enrichment_product_variant")
-        ),
-        "args" to mapOf(
-            "accountId" to "JENTIS TEST ACCOUNT",
-            "page_title" to "Demo-APP Order Confirmed",
-            "productId" to listOf("111", "222", "333", "444")
         )
     )
 
     JentisTrackService.getInstance()
-        .addEnrichment(mockEnrichment, enrichmentMap)
+        .addEnrichment(enrichmentMap)
 }
 
 fun addCustomEnrichment() {
@@ -378,6 +338,4 @@ fun processEnrichment(checked: Boolean, valueCustom: Boolean) {
 
     if (checked)
         addEnrichment()
-    else if (valueCustom)
-        addCustomEnrichment()
 }
