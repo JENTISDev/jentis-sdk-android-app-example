@@ -32,7 +32,8 @@ import com.jentis.sdk.jentissdk.JentisTrackService
 @Composable
 fun TrackingScreen(navController: NavController) {
     val customInitiator = remember { mutableStateOf("") }
-    val includeEnrichmentData = remember { mutableStateOf(true) }
+    val includeEnrichmentData = remember { mutableStateOf(false) }
+    val includeEnrichmentCustomData = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -54,6 +55,7 @@ fun TrackingScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Top
             ) {
                 // Include Enrichment Data
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -68,10 +70,35 @@ fun TrackingScreen(navController: NavController) {
                         checked = includeEnrichmentData.value,
                         onCheckedChange = {
                             includeEnrichmentData.value = it
-                            processEnrichment(it)
                         }
                     )
                 }
+
+                /*
+           // Include Enrichment Custom Data
+           Row(
+               verticalAlignment = Alignment.CenterVertically,
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .padding(bottom = 16.dp)
+           ) {
+               Text(
+                   text = "Include Custom Enrichment Data",
+                   modifier = Modifier.weight(1f)
+               )
+               Switch(
+                   checked = includeEnrichmentCustomData.value,
+                   onCheckedChange = {
+                       includeEnrichmentCustomData.value = it
+                       includeEnrichmentData.value = it.not()
+                       processEnrichment(
+                           includeEnrichmentData.value,
+                           includeEnrichmentCustomData.value
+                       )
+                   }
+               )
+           }
+            */
 
                 // Custom Initiator Field
                 TextField(
@@ -83,27 +110,53 @@ fun TrackingScreen(navController: NavController) {
                         .padding(bottom = 16.dp)
                 )
 
-                // Buttons Section
                 TrackingButton(
                     label = "PageView",
                     backgroundColor = Color.Blue,
-                    onClick = { addPageView(customInitiator.value) }
+                    onClick = {
+                        addPageView(
+                            customInitiator.value,
+                            includeEnrichmentData.value,
+                            includeEnrichmentCustomData.value
+                        )
+                    }
                 )
                 TrackingButton(
                     label = "ProductView",
-                    backgroundColor = Color(0xFF9C27B0), // Purple
-                    onClick = { addProductView(customInitiator.value) }
+                    backgroundColor = Color(0xFF9C27B0),
+                    onClick = {
+                        addProductView(
+                            customInitiator.value,
+                            includeEnrichmentData.value,
+                            includeEnrichmentCustomData.value
+                        )
+                    }
                 )
                 TrackingButton(
                     label = "Add-To-Cart",
                     backgroundColor = Color.Green,
-                    onClick = { addToCart(customInitiator.value) }
+                    onClick = {
+                        addToCart(
+                            customInitiator.value,
+                            includeEnrichmentData.value,
+                            includeEnrichmentCustomData.value
+                        )
+                    }
                 )
                 TrackingButton(
                     label = "Order",
-                    backgroundColor = Color(0xFFFFA500), // Orange
-                    onClick = { addOrders(customInitiator.value) }
+                    backgroundColor = Color(0xFFFFA500),
+                    onClick = {
+                        addOrders(
+                            customInitiator.value,
+                            includeEnrichmentData.value,
+                            includeEnrichmentCustomData.value
+                        )
+                    }
                 )
+
+                /*
+
                 TrackingButton(
                     label = "Add Enrichment",
                     backgroundColor = Color(0xFFFF5722), // Deep Orange
@@ -114,6 +167,8 @@ fun TrackingScreen(navController: NavController) {
                     backgroundColor = Color.Gray,
                     onClick = { addCustomEnrichment() }
                 )
+
+                 */
             }
         }
     )
@@ -141,7 +196,8 @@ fun TrackingButton(label: String, backgroundColor: Color, onClick: () -> Unit) {
     }
 }
 
-fun addPageView(customInitiator: String) {
+fun addPageView(customInitiator: String, value: Boolean, valueCustom: Boolean) {
+    processEnrichment(value, valueCustom)
     val mockPageView = listOf(
         mapOf(
             "track" to "pageview",
@@ -158,7 +214,8 @@ fun addPageView(customInitiator: String) {
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
-fun addProductView(customInitiator: String) {
+fun addProductView(customInitiator: String, value: Boolean, valueCustom: Boolean) {
+    processEnrichment(value, valueCustom)
     val mockValuesProducts = listOf(
         mapOf(
             "track" to "pageview",
@@ -181,7 +238,9 @@ fun addProductView(customInitiator: String) {
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
-fun addToCart(customInitiator: String) {
+fun addToCart(customInitiator: String, value: Boolean, valueCustom: Boolean) {
+    processEnrichment(value, valueCustom)
+
     val mockAddToCart = listOf(
         mapOf(
             "track" to "product",
@@ -199,45 +258,13 @@ fun addToCart(customInitiator: String) {
     JentisTrackService.getInstance().submit(customInitiator)
 }
 
-fun addOrders(customInitiator: String) {
+fun addOrders(customInitiator: String, value: Boolean, valueCustom: Boolean) {
+    processEnrichment(value, valueCustom)
+
     val mockOrders = listOf(
         mapOf(
             "track" to "pageview",
             "pagetitle" to "Demo-APP Order Confirmed"
-        ),
-        mapOf(
-            "track" to "product",
-            "type" to "order",
-            "id" to "123",
-            "name" to "Testproduct",
-            "brutto" to 199.99
-        ),
-        mapOf(
-            "track" to "product",
-            "type" to "order",
-            "id" to "456",
-            "name" to "Testproduct 2",
-            "brutto" to 299.99
-        ),
-        mapOf(
-            "track" to "order",
-            "orderid" to "12345666",
-            "brutto" to 499.98,
-            "paytype" to "creditcart"
-        )
-    )
-
-    JentisTrackService.getInstance().push(mockOrders)
-
-    JentisTrackService.getInstance().submit(customInitiator)
-}
-
-fun addEnrichment() {
-    val mockEnrichment = listOf(
-        mapOf(
-            "track" to "pageview",
-            "pagetitle" to "Demo-APP Order Confirmed",
-            "account" to "JENTIS TEST ACCOUNT"
         ),
         mapOf(
             "track" to "product",
@@ -267,22 +294,24 @@ fun addEnrichment() {
         )
     )
 
+    JentisTrackService.getInstance().push(mockOrders)
+
+    JentisTrackService.getInstance().submit(customInitiator)
+}
+
+fun addEnrichment() {
+
     val enrichmentMap = mapOf(
         "plugin" to mapOf(
             "pluginId" to "enrichment_xxxlprodfeed"
         ),
         "enrichment" to mapOf(
             "variablesEnrichment" to listOf("enrichment_product_variant")
-        ),
-        "args" to mapOf(
-            "accountId" to "JENTIS TEST ACCOUNT",
-            "page_title" to "Demo-APP Order Confirmed",
-            "productId" to listOf("111", "222", "333", "444")
         )
     )
 
     JentisTrackService.getInstance()
-        .addEnrichment(mockEnrichment, enrichmentMap)
+        .addEnrichment(enrichmentMap)
 }
 
 fun addCustomEnrichment() {
@@ -304,7 +333,9 @@ fun addCustomEnrichment() {
         .addCustomEnrichment(enrichmentMap)
 }
 
-fun processEnrichment(checked: Boolean) {
-    if (checked.not())
-        JentisTrackService.getInstance().cleanEnrichments()
+fun processEnrichment(checked: Boolean, valueCustom: Boolean) {
+    JentisTrackService.getInstance().cleanEnrichments()
+
+    if (checked)
+        addEnrichment()
 }
