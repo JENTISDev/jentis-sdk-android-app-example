@@ -15,12 +15,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -123,6 +126,8 @@ fun ConfigurationScreen(navController: NavController) {
 
 @Composable
 fun ProtocolSelector(selectedProtocol: String, onProtocolChange: (String) -> Unit) {
+    val baseColor = Color(0xFF0068A3)
+
     Column {
         Text("Protocol", style = MaterialTheme.typography.bodyLarge)
         Row(
@@ -131,12 +136,20 @@ fun ProtocolSelector(selectedProtocol: String, onProtocolChange: (String) -> Uni
         ) {
             RadioButton(
                 selected = selectedProtocol == "https://",
-                onClick = { onProtocolChange("https://") }
+                onClick = { onProtocolChange("https://") },
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = baseColor,
+                    unselectedColor = baseColor.copy(alpha = 0.5f)
+                )
             )
             Text("https://", modifier = Modifier.padding(end = 16.dp))
             RadioButton(
                 selected = selectedProtocol == "http://",
-                onClick = { onProtocolChange("http://") }
+                onClick = { onProtocolChange("http://") },
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = baseColor,
+                    unselectedColor = baseColor.copy(alpha = 0.5f)
+                )
             )
             Text("http://")
         }
@@ -158,6 +171,8 @@ fun ConfigurationTopBar(navController: NavController) {
 
 @Composable
 fun EnvironmentSelector(selectedEnvironment: String, onEnvironmentChange: (String) -> Unit) {
+    val baseColor = Color(0xFF0068A3)
+
     Column {
         Text("Environment", style = MaterialTheme.typography.bodyLarge)
         Row(
@@ -167,7 +182,11 @@ fun EnvironmentSelector(selectedEnvironment: String, onEnvironmentChange: (Strin
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = selectedEnvironment == "live",
-                    onClick = { onEnvironmentChange("live") }
+                    onClick = { onEnvironmentChange("live") },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = baseColor,
+                        unselectedColor = baseColor.copy(alpha = 0.5f)
+                    )
                 )
                 Text("Live", modifier = Modifier.padding(start = 8.dp))
             }
@@ -175,7 +194,11 @@ fun EnvironmentSelector(selectedEnvironment: String, onEnvironmentChange: (Strin
             Row(verticalAlignment = Alignment.CenterVertically) {
                 RadioButton(
                     selected = selectedEnvironment == "stage",
-                    onClick = { onEnvironmentChange("stage") }
+                    onClick = { onEnvironmentChange("stage") },
+                    colors = RadioButtonDefaults.colors(
+                        selectedColor = baseColor,
+                        unselectedColor = baseColor.copy(alpha = 0.5f)
+                    )
                 )
                 Text("Stage", modifier = Modifier.padding(start = 8.dp))
             }
@@ -193,7 +216,10 @@ fun DebuggingSwitch(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
         Text("Enable Debugging", style = MaterialTheme.typography.bodyLarge)
         androidx.compose.material3.Switch(
             checked = isEnabled,
-            onCheckedChange = onToggle
+            onCheckedChange = onToggle,
+            colors = androidx.compose.material3.SwitchDefaults.colors(
+                checkedTrackColor = Color(0xFF0068A3)
+            )
         )
     }
 }
@@ -237,33 +263,35 @@ fun SaveButton(
     protocol: String,
     isDebuggingEnabled: Boolean
 ) {
-    Button(onClick = {
-        prefsManager.saveString("protocol", protocol)
-        prefsManager.saveString("trackDomain", trackDomain)
-        prefsManager.saveString("container", container)
-        prefsManager.saveString("sessionTimeout", sessionTimeout)
-        prefsManager.saveString("environment", environment)
-        prefsManager.saveString("enabledDebugging", isDebuggingEnabled.toString())
+    Button(
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0068A3)),
+        onClick = {
+            prefsManager.saveString("protocol", protocol)
+            prefsManager.saveString("trackDomain", trackDomain)
+            prefsManager.saveString("container", container)
+            prefsManager.saveString("sessionTimeout", sessionTimeout)
+            prefsManager.saveString("environment", environment)
+            prefsManager.saveString("enabledDebugging", isDebuggingEnabled.toString())
 
-        val versionToSave = if (isDebuggingEnabled) version else ""
-        val debugCodeToSave = if (isDebuggingEnabled) debugCode else ""
+            val versionToSave = if (isDebuggingEnabled) version else ""
+            val debugCodeToSave = if (isDebuggingEnabled) debugCode else ""
 
-        prefsManager.saveString("version", versionToSave)
-        prefsManager.saveString("debugCode", debugCodeToSave)
+            prefsManager.saveString("version", versionToSave)
+            prefsManager.saveString("debugCode", debugCodeToSave)
 
-        JentisTrackService.getInstance().restartConfig(
-            trackDomain = trackDomain,
-            container = container,
-            environment = environment,
-            version = versionToSave,
-            debugCode = debugCodeToSave,
-            sessionTimeoutParam = sessionTimeout.toIntOrNull(),
-            authToken = null,
-            protocol = protocol
-        )
+            JentisTrackService.getInstance().restartConfig(
+                trackDomain = trackDomain,
+                container = container,
+                environment = environment,
+                version = versionToSave,
+                debugCode = debugCodeToSave,
+                sessionTimeoutParam = sessionTimeout.toIntOrNull(),
+                authToken = null,
+                protocol = protocol
+            )
 
-        Toast.makeText(context, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
-    }) {
-        Text("Save configuration")
+            Toast.makeText(context, "Configuration saved successfully", Toast.LENGTH_SHORT).show()
+        }) {
+        Text("Save")
     }
 }

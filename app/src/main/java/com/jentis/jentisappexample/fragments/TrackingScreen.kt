@@ -101,18 +101,22 @@ fun TrackingScreen(navController: NavController) {
             */
 
                 // Custom Initiator Field
+                SectionHeader("Custom initiator (Optional)")
+
                 TextField(
                     value = customInitiator.value,
                     onValueChange = { customInitiator.value = it },
-                    label = { Text("Custom Initiator (Optional)") },
+                    label = { Text("Enter custom initiator") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 )
 
+                SectionHeader("General Initiators")
+
                 TrackingButton(
                     label = "PageView",
-                    backgroundColor = Color.Blue,
+                    backgroundColor = Color(0xFF0068A3),
                     onClick = {
                         addPageView(
                             customInitiator.value,
@@ -123,7 +127,7 @@ fun TrackingScreen(navController: NavController) {
                 )
                 TrackingButton(
                     label = "ProductView",
-                    backgroundColor = Color(0xFF9C27B0),
+                    backgroundColor = Color(0xFF0068A3),
                     onClick = {
                         addProductView(
                             customInitiator.value,
@@ -132,9 +136,12 @@ fun TrackingScreen(navController: NavController) {
                         )
                     }
                 )
+
+                SectionHeader("E-commerce Initiators")
+
                 TrackingButton(
                     label = "Add-To-Cart",
-                    backgroundColor = Color.Green,
+                    backgroundColor = Color(0xFF0068A3),
                     onClick = {
                         addToCart(
                             customInitiator.value,
@@ -145,7 +152,7 @@ fun TrackingScreen(navController: NavController) {
                 )
                 TrackingButton(
                     label = "Order",
-                    backgroundColor = Color(0xFFFFA500),
+                    backgroundColor = Color(0xFF0068A3),
                     onClick = {
                         addOrders(
                             customInitiator.value,
@@ -155,8 +162,10 @@ fun TrackingScreen(navController: NavController) {
                     }
                 )
 
+
                 /*
 
+                SectionHeader("Enrichment Initiators")
                 TrackingButton(
                     label = "Add Enrichment",
                     backgroundColor = Color(0xFFFF5722), // Deep Orange
@@ -171,6 +180,17 @@ fun TrackingScreen(navController: NavController) {
                  */
             }
         }
+    )
+}
+
+@Composable
+fun SectionHeader(title: String) {
+    Text(
+        text = title,
+        color = Color.Black,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
     )
 }
 

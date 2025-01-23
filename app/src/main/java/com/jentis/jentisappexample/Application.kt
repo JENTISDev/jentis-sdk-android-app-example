@@ -20,11 +20,14 @@ class Application : Application() {
 
         val protocol = prefsManager.getString("protocol", "https://")
         val trackDomain = prefsManager.getString("trackDomain", "nd7cud.mobiweb.jtm-demo.com")
-        val container = prefsManager.getString("container", "mobiweb-demoshop")
-        val version = prefsManager.getString("version", "1")
-        val debugCode = prefsManager.getString("debugCode", "44c2acd3-43d4-4234-983b-48e91")
-        val sessionTimeout = prefsManager.getString("sessionTimeout", "180")
+        val container = prefsManager.getString("container", "mipion-demo")
+        val version = prefsManager.getString("version", "3")
+        val debugCode = prefsManager.getString("debugCode", "44c2acd3-434d-4234-983b-48e91551eb5a")
+        val sessionTimeout = prefsManager.getString("sessionTimeout", "1800")
         val environment = prefsManager.getString("environment", "live")
+        val authToken = "22fef7a3b00466743fee2ab8cd8afb01"
+        val enableOfflineTracking = true
+        val sessionTimeoutInSeconds = 1800L
 
         val trustManagerFactory =
             TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
@@ -54,11 +57,11 @@ class Application : Application() {
             environment = environment,
             version = version,
             debugCode = debugCode,
-            authToken = null,
+            authToken = authToken,
             sessionTimeoutParam = sessionTimeout.toIntOrNull(),
             protocol = protocol,
-            enableOfflineTracking = true,
-            offlineTimeout = 60
+            enableOfflineTracking = enableOfflineTracking,
+            offlineTimeout = sessionTimeoutInSeconds
         )
     }
 }

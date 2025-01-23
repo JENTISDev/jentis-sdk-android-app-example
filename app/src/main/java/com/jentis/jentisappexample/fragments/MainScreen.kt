@@ -2,6 +2,7 @@ package com.jentis.jentisappexample.fragments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
@@ -58,7 +60,7 @@ fun VendorConsentBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.LightGray)
+            .background(Color(0xFFE1F5FE))
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -75,11 +77,29 @@ fun VendorConsentBox(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = onVendorsSet) {
-                    Text(text = "Set Vendors")
+                Button(
+                    onClick = onVendorsSet,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFFFFFFF)
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color(0xFF0068A3),
+                            shape = RoundedCornerShape(40.dp)
+                        ),
+                    shape = RoundedCornerShape(40.dp)
+                ) {
+                    Text(
+                        text = "Set Vendors",
+                        color = Color(0xFF0068A3)
+                    )
                 }
             }
         }
@@ -138,9 +158,9 @@ fun MainScreen(navController: NavController) {
     var vendorConsents by remember { mutableStateOf(getInitialVendorConsents()) }
 
     Scaffold(
-        topBar = { appTopBar(navController) },
+        topBar = { AppTopBar(navController) },
         content = { padding ->
-            mainContent(
+            MainContent(
                 padding = padding,
                 isBoxVisible = isBoxVisible,
                 onConsentClicked = { isBoxVisible = !isBoxVisible },
@@ -163,7 +183,7 @@ fun MainScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun appTopBar(navController: NavController) {
+fun AppTopBar(navController: NavController) {
     TopAppBar(
         title = { Text("Jentis SDK Demo") },
         actions = {
@@ -175,7 +195,7 @@ fun appTopBar(navController: NavController) {
 }
 
 @Composable
-fun mainContent(
+fun MainContent(
     padding: PaddingValues,
     isBoxVisible: Boolean,
     onConsentClicked: () -> Unit,
@@ -183,7 +203,7 @@ fun mainContent(
     onVendorConsentChange: (String, String) -> Unit,
     onVendorsSet: () -> Unit,
     navController: NavController,
-    appVersion : String
+    appVersion: String
 ) {
     Column(
         modifier = Modifier
@@ -207,13 +227,24 @@ fun mainContent(
 
         Button(
             onClick = { onConsentClicked() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFFFFFFFF)
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFF0068A3),
+                    shape = RoundedCornerShape(40.dp)
+                )
         ) {
-            Text("Consent Modal")
+            Text(
+                text = "Consent Modal",
+                color = Color(0xFF0068A3)
+            )
         }
+
 
         if (isBoxVisible) {
             VendorConsentBox(
@@ -223,18 +254,23 @@ fun mainContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = {
                 navController.navigate("tracking")
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF800080)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0068A3)),
+            shape = RoundedCornerShape(40.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
+                .height(50.dp)
         ) {
-            Text("Tracking Examples")
+            Text(
+                text = "Tracking Examples",
+                color = Color(0xFFFFFFFF)
+            )
         }
 
 
