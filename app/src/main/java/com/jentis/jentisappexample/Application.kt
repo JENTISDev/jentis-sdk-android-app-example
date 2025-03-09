@@ -25,7 +25,7 @@ class Application : Application() {
         val debugCode = prefsManager.getString("debugCode", "44c2acd3-434d-4234-983b-48e91551eb5a")
         val sessionTimeout = prefsManager.getString("sessionTimeout", "1800")
         val environment = prefsManager.getString("environment", "live")
-        val authToken = "22fef7a3b00466743fee2ab8cd8afb01"
+        val authToken = prefsManager.getString("authToken", "22fef7a3b00466743fee2ab8cd8afb01")
         val enableOfflineTracking = true
         val sessionTimeoutInSeconds = 1800L
 

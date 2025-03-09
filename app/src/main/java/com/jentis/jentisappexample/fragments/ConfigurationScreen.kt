@@ -55,6 +55,16 @@ fun ConfigurationScreen(navController: NavController) {
     val container =
         remember { mutableStateOf(prefsManager.getString("container", "mobiweb-demoshop")) }
     val version = remember { mutableStateOf(prefsManager.getString("version", "1")) }
+
+    val authToken = remember {
+        mutableStateOf(
+            prefsManager.getString(
+                "authToken",
+                "22fef7a3b00466743fee2ab8cd8afb01"
+            )
+        )
+    }
+
     val debugCode = remember {
         mutableStateOf(
             prefsManager.getString(
@@ -105,6 +115,12 @@ fun ConfigurationScreen(navController: NavController) {
                     "Session Timeout (seconds)",
                     sessionTimeout.value
                 ) { sessionTimeout.value = it }
+
+                InputField(
+                    "Auth Token",
+                    authToken.value
+                ) { authToken.value = it }
+
                 EnvironmentSelector(environment.value) { environment.value = it }
                 Spacer(modifier = Modifier.height(20.dp))
                 SaveButton(
@@ -117,7 +133,8 @@ fun ConfigurationScreen(navController: NavController) {
                     debugCode = debugCode.value,
                     sessionTimeout = sessionTimeout.value,
                     environment = environment.value,
-                    isDebuggingEnabled = isDebuggingEnabled.value
+                    isDebuggingEnabled = isDebuggingEnabled.value,
+                    authToken = authToken.value
                 )
             }
         }
@@ -261,7 +278,8 @@ fun SaveButton(
     debugCode: String,
     sessionTimeout: String,
     protocol: String,
-    isDebuggingEnabled: Boolean
+    isDebuggingEnabled: Boolean,
+    authToken: String,
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0068A3)),
@@ -272,6 +290,7 @@ fun SaveButton(
             prefsManager.saveString("sessionTimeout", sessionTimeout)
             prefsManager.saveString("environment", environment)
             prefsManager.saveString("enabledDebugging", isDebuggingEnabled.toString())
+            prefsManager.saveString("authToken", authToken)
 
             val versionToSave = if (isDebuggingEnabled) version else ""
             val debugCodeToSave = if (isDebuggingEnabled) debugCode else ""
@@ -286,7 +305,7 @@ fun SaveButton(
                 version = versionToSave,
                 debugCode = debugCodeToSave,
                 sessionTimeoutParam = sessionTimeout.toIntOrNull(),
-                authToken = null,
+                authToken = authToken,
                 protocol = protocol
             )
 
